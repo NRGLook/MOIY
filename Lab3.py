@@ -196,7 +196,6 @@ def main():
     test2()
     input()
     test3()
-    input()
 
 
 if __name__ == '__main__':
