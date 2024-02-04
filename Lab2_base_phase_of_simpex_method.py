@@ -38,7 +38,7 @@ def simplex_main_phase(c, A, x, B):
         # Шаг 8: Вычисляем вектор θ
         theta = np.full(m, np.inf)
         positive_indices = np.where(z > 0)[0]
-        theta[positive_indices] = x[B[positive_indices]] / z[positive_indices]
+        theta[positive_indices] = x[np.array(B).astype(int)[positive_indices]] / z[positive_indices]
         print("theta:", theta)
 
         # Шаг 9: Вычисляем θ0
@@ -70,14 +70,34 @@ def simplex_main_phase(c, A, x, B):
         iteration += 1
 
 
-# Входные данные
-c = np.array([1, 1, 0, 0, 0])
-A = np.array([[-1, 1, 1, 0, 0],
-              [1, 0, 0, 1, 0],
-              [0, 1, 0, 0, 1]])
-x = np.array([0, 0, 1, 3, 2])
-B = np.array([2, 3, 4])  # Индексы базисных переменных
 
-# Вызов функции
-optimal_solution = simplex_main_phase(c, A, x, B)
-print("Оптимальное решение:", optimal_solution.astype(int))
+# Пример 1 (методичка)
+
+
+# # Входные данные
+# c = np.array([1, 1, 0, 0, 0])
+# A = np.array([[-1, 1, 1, 0, 0],
+#               [1, 0, 0, 1, 0],
+#               [0, 1, 0, 0, 1]])
+# x = np.array([0, 0, 1, 3, 2])
+# # B = np.array([2, 3, 4])  # Индексы базисных переменных
+# #
+# # # Вызов функции
+# optimal_solution = simplex_main_phase(c, A, x, B)
+# print("Оптимальное решение:", optimal_solution.astype(int))
+
+
+# # Пример 2
+#
+# # Входные данные
+# c = np.array([1, 0, 0, 0, 0])  # Задаем целевую функцию
+# A = np.array([[1, -1, 0, 0, 0], [0, 1, -1, 0, 0], [0, 0, 1, -1, 0]])  # Определяем ограничения
+# x = np.array([0, 0, 0, 0, 0])  # Начальное допустимое решение
+# B = np.array([0, 1, 2])  # Индексы базисных переменных
+
+# # Вызываем функцию
+# optimal_solution = simplex_main_phase(c, A, x, B)
+# if isinstance(optimal_solution, str):
+#     print(optimal_solution)  # Если решение - строка, выводим ее
+# else:
+#     print("Оптимальное решение:", optimal_solution.astype(int))
