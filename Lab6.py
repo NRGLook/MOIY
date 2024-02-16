@@ -1,9 +1,12 @@
 import numpy as np
 
-
+# Функция решения задачи квадратного программирования
 def quadratic_programming_problem(A, d, x, J_op, J, B, debug=False):
+    # Вычисление матрицы D
     D = np.dot(B.T, B)
+    # Вычисление вектора c
     c = - np.dot(d.T, B)
+    # Преобразование индексов J и J_op из единицы в ноль
     J -= 1
     J_op -= 1
     m, n = A.shape
@@ -11,11 +14,13 @@ def quadratic_programming_problem(A, d, x, J_op, J, B, debug=False):
     skip_1 = False
     j0 = 0
 
+    # Основной цикл итераций
     while True:
         iteration += 1
 
         print('==================================================================================')
         if not skip_1:
+            # Вычисление вспомогательных переменных
             not_J_op = np.delete(np.arange(n), J_op)
             c_x = c + np.dot(x, D)
             A_op_inv = np.linalg.inv(A[:, J_op])
@@ -23,6 +28,7 @@ def quadratic_programming_problem(A, d, x, J_op, J, B, debug=False):
             delta = u_x.dot(A) + c_x
             round_delta = np.array(list(map(lambda _x: round(float(_x), 4), delta)))
 
+            # Проверка оптимальности текущего плана
             if (round_delta >= 0).all():
                 print()
                 print(list(map(lambda _x: round(float(_x), 3), list(x))), " - оптимальный план")
@@ -45,9 +51,11 @@ def quadratic_programming_problem(A, d, x, J_op, J, B, debug=False):
         b_z = np.zeros(m + len_J)
         b_z[: len_J], b_z[len_J:] = D[j0][J], A[:, j0]
 
+        # Решение системы линейных уравнений
         x_kr = np.linalg.inv(H).dot(-b_z)
         l[J] = x_kr[: len_J]
 
+        # Вычисление тета и выбор базисной переменной
         theta = [-x[i] / l[i] if l[i] < 0 else np.inf for i in J]
         j_z = np.argmin(theta)
 
@@ -112,6 +120,8 @@ def quadratic_programming_problem(A, d, x, J_op, J, B, debug=False):
             print("J_op = ", J_op)
             print("J* = ", J)
 
+
+# Тесты
 
 def test_1():
     A = np.array([

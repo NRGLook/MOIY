@@ -1,6 +1,6 @@
 import numpy as np
 
-
+# Функция для расширения векторов до одинаковой длины
 def extend(a, b, c):
     a_extended = np.array(a)
     b_extended = np.array(b)
@@ -9,15 +9,18 @@ def extend(a, b, c):
     sa = sum(a)
     sb = sum(b)
     print(c_extended.shape, np.zeros((len(a), 1)))
+    # Если сумма значений вектора a больше суммы значений вектора b,
+    # то расширяем вектор b и матрицу c
     if sa > sb:
         b_extended = np.append(b_extended, sa - sb)
         c_extended = np.hstack((c_extended, np.zeros((len(a), 1))))
     else:
+        # Иначе расширяем вектор a и матрицу c
         a_extended = np.append(a_extended, sb - sa)
         c_extended = np.vstack((c_extended, np.zeros(len(b))))
     return a_extended, b_extended, c_extended
 
-
+# Функция построения начальной матрицы x методом северо-западного угла
 def build_X_north_west(a, b):
     m = len(a)
     n = len(b)
@@ -41,7 +44,7 @@ def build_X_north_west(a, b):
 
     return x, J
 
-
+# Функция нахождения потенциалов
 def get_potentials(x, c, J):
     m, n = np.shape(x)
 
@@ -66,7 +69,7 @@ def get_potentials(x, c, J):
     v = res[m:]
     return u, v
 
-
+# Функция проверки потенциалов
 def check_potentials(c, u, v, J):
     max_val = -10 ** 10
     max_val_pos = (-1, -1)
@@ -78,7 +81,7 @@ def check_potentials(c, u, v, J):
     print('Max potential diff:', max_val)
     return max_val_pos
 
-
+# Функция построения графа
 def build_tree(x, J):
     m, n = np.shape(x)
     g = [[] for _ in range(m * n)]
@@ -101,7 +104,7 @@ def build_tree(x, J):
     print(g)
     return g
 
-
+# Функция поиска ближайших позиций
 def find_nearest(i, j, J):
     row = [pos for pos in J if pos[0] == i and pos[1] != j]
     col = [pos for pos in J if pos[1] == j and pos[0] != i]
@@ -122,7 +125,7 @@ def find_nearest(i, j, J):
 
     return nearest_row_pos, nearest_col_pos
 
-
+# Функция построения пути
 def find_path(g, nearest_row_pos, nearest_col_pos, size):
     m, n = size
 
@@ -164,7 +167,7 @@ def find_path(g, nearest_row_pos, nearest_col_pos, size):
     print('path:', path)
     return path
 
-
+# Функция получения позиций бокового пути
 def get_side_path_positions(path):
     k = 0
     new_path = []
@@ -190,7 +193,7 @@ def get_side_path_positions(path):
             break
     return new_path
 
-
+# Функция обновления пути
 def update_path(x, path, J, new_pos):
     m, n = np.shape(x)
     x_new = np.copy(x)
@@ -238,7 +241,7 @@ def update_path(x, path, J, new_pos):
     J_new.append(new_pos)
     return x_new, J_new
 
-
+# Функция итераций
 def iterations(x, J, c, iteration=0):
     if iteration == 100:
         raise OverflowError('Iteration limit reached')
@@ -263,8 +266,7 @@ def iterations(x, J, c, iteration=0):
     print('New x: {}, new J: {}'.format(x, J))
     return iterations(x, J, c, iteration + 1)
 
-
-# matrix transport problem
+# Функция решения задачи транспортной логистики
 def solve_mtp(a, b, c):
     if sum(a) != sum(b):
         a, b, c = extend(a, b, c)
@@ -279,7 +281,7 @@ def solve_mtp(a, b, c):
     print(s)
     return x, J
 
-
+# Тестовые функции
 def test_1():
     a = [100, 300, 300]
     b = [300, 200, 200]
